@@ -31,6 +31,9 @@ let carrito = [];
 // Muestra los productos en la pagina principal en un div usando card de Boostrap
 // Muestra via modal los productos seleccionados
 function mostrarProductos() {
+  
+  
+  
   productosDiv.innerHTML = '';
   productosBase.forEach(itemProducto => {
     const productoDiv = document.createElement("div");
@@ -56,13 +59,14 @@ function mostrarProductos() {
               <button class="btn btn-primary btn-sm" onclick="agregarCarrito('${itemProducto.id}',contador${itemProducto.id}.value )">Agregar</button>
             </div>
           </div>
-        </form>
+        
         <div class="row p-2">
           <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPago">
           Ver Carrito
           </button>
         </div>
       </div>
+    </form>
     `;
     productosDiv.appendChild(productoDiv);
   });
@@ -162,32 +166,34 @@ function finalizarCarrito () {
         <p>El valor total de la compra es: $${total}</p>  
         <hr>
         <p class="mb-0">Ingrese sus datos para que le enviemos el detalle de su pedido y metodos de pago.</p>
-        <div class="g-4">
-          <div class="row p-1">
-            <div class="col-sm-10 col-lg-5 col-xl-6 ">
-              <input type="nombre" class="form-control frm" placeholder="Nombre" id="nombre">
+        <form  id="formCompra">
+          <div class="g-4">
+            <div class="row p-1">
+              <div class="col-sm-10 col-lg-5 col-xl-6 ">
+                <input type="nombre" class="form-control frm" placeholder="Nombre" id="nombre">
+              </div>
+            </div>
+            <div class="row p-1">
+              <div class="col-sm-10 col-lg-5 col-xl-6">
+                <input type="email" class="form-control" placeholder="nombre@ejemplo.com" id="email">
+              </div>
+            </div>
+            <div class="row p-1">
+              <div class="col-1">
+                <button type="button" class="btn btn-success" onclick="enviarCarrito()">Enviar</button>
+              </div>
             </div>
           </div>
-          <div class="row p-1">
-            <div class="col-sm-10 col-lg-5 col-xl-6">
-              <input type="email" class="form-control" placeholder="nombre@ejemplo.com" id="email">
-            </div>
-          </div>
-          <div class="row p-1">
-            <div class="col-1">
-              <button type="button" class="btn btn-success" onclick="enviarCarrito()">Enviar</button>
-            </div>
-          </div>
-        </div>  
+        </form>  
       </div>
     
     </div>
     `;
   botonesFinalCompra.innerHTML = `
-    <div id="botonesFinalCompra">
-      <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Seguir Comprando</button>
+  
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" onclick="limpiarCuenta()">Seguir Comprando</button>
       <button type="button" class="btn btn-outline-danger btn-sm" onclick="vaciarCarrito()" >Limpiar Carrito</button>     
-    </div>
+   
   `;
   }else {
 
@@ -203,12 +209,58 @@ function finalizarCarrito () {
     `;
   botonesFinalCompra.innerHTML = `
     <div id="botonesFinalCompra">
-    <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Seguir Comprando</button>   
+    <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal" onclick="limpiarCuentaModal()" >Seguir Comprando</button>   
     </div>
     `;
   }
 
 }
+
+function limpiarCuenta(){
+  valorFinalCompra.innerHTML = `
+  <div class="container p-4">
+  </div>
+ 
+  `;
+  botonesFinalCompra.innerHTML = `
+    <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Seguir Comprando</button>
+    <button type="button" class="btn btn-danger btn-sm" onclick="vaciarCarrito()" >Limpiar Carrito</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="finalizarCarrito()">Finalizar Compra</button>
+  `;
+}
+
+
+function limpiarCuentaModal(){
+  modalPago.innerHTML = `
+<div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-4" id="modalFinal">Carrito de Compras</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h2>Resumen de Compra</h2>
+          <div class="container">
+          <!-- Visualizador de Productos--> 
+            <div class="list-group" id="itemsCompra">
+            </div>
+          </div>
+          <!-- Visualizador de Total-->
+          <div id="valorFinalCompra"></div>
+          <!-- Botones actualizables Cerrar Finalizar Borrar-->
+          <div id="botonesFinalCompra">
+          <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Seguir Comprando</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="vaciarCarrito()" >Limpiar Carrito</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="finalizarCarrito()">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+}
+
+
+
 
 function enviarCarrito(){
   modalPago.innerHTML = `
@@ -224,8 +276,9 @@ function enviarCarrito(){
   
 // Testeo
 const app = ()=>{
-  mostrarProductos();
+  
   cargarCarritoDesdeLocalStorage();
+  mostrarProductos();
 }
 
 //ejecuto app
