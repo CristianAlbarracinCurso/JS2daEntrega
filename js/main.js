@@ -9,7 +9,7 @@ class Producto{
   }
 }
 
-// Array de productos
+// Declaraciones
 const productosBase = [
   {nombre:"Memoria RAM DDR4 8GB", id:"001",precio:8000, stock:2, descripcion:"Memory Speed:2666/3000/3200MHz Memory Channel:Dual Channel"},
   {nombre:"Memoria RAM DDR4 16GB", id:"002", precio:15000, stock:9, descripcion:"Memory Speed:2666/3000/3200MHz Memory Channel:Dual Channel"},
@@ -23,7 +23,6 @@ const productosBase = [
   {nombre:"Gabinete KIT", id:"010",  precio:36000, stock:4, descripcion:"Gabinete generico con fuente teclado Mouse y parlantes de regalo"},
   {nombre:"Gabinete GAMER", id:"011",  precio:50000, stock:3, descripcion:"Gabinete sin Fuente y Luces Led"},
 ]
-
 const productosDiv = document.getElementById('itemProducto');
 const carritoUl = document.getElementById('itemsCompra');
 let carrito = [];
@@ -31,9 +30,6 @@ let carrito = [];
 // Muestra los productos en la pagina principal en un div usando card de Boostrap
 // Muestra via modal los productos seleccionados
 function mostrarProductos() {
-  
-  
-  
   productosDiv.innerHTML = '';
   productosBase.forEach(itemProducto => {
     const productoDiv = document.createElement("div");
@@ -59,7 +55,6 @@ function mostrarProductos() {
               <button class="btn btn-primary btn-sm" onclick="agregarCarrito('${itemProducto.id}',contador${itemProducto.id}.value )">Agregar</button>
             </div>
           </div>
-        
         <div class="row p-2">
           <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPago">
           Ver Carrito
@@ -72,7 +67,6 @@ function mostrarProductos() {
   });
 }
 
-// 
 function agregarCarrito(id, cantidad) {
   const itemProducto = productosBase.find(p => p.id === id);
   // valida si ingresa un valor mayor a 0, ya se elinó la cantidad negativa o mayor al stock en los imputs, 
@@ -93,8 +87,6 @@ function agregarCarrito(id, cantidad) {
       itemCompra();
       guardarCarritoEnLocalStorage();    
       alert('Producto Agregagado.');
-
-
       // Mensajes de errores
     } else {
       alert('Seleccione una cantidad válida.');
@@ -104,11 +96,10 @@ function agregarCarrito(id, cantidad) {
   }
 }
 
+// Guarda en el Almacenamiento Local
 function guardarCarritoEnLocalStorage() {
   localStorage.setItem('carrito', JSON.stringify(carrito));
 }
-
-
 
 // lista los productos comprados, su cantidad y precio
 function itemCompra() {
@@ -139,6 +130,7 @@ function eliminarProductoCarrito(id) {
   }
 }
 
+// Leer almacenamiento local
 function cargarCarritoDesdeLocalStorage() {
   const carritoGuardado = localStorage.getItem('carrito');
   if (carritoGuardado) {
@@ -147,17 +139,19 @@ function cargarCarritoDesdeLocalStorage() {
   }
 }
 
+// Eliminar todos los productos del carrito
 function vaciarCarrito () {
   localStorage.removeItem('carrito');
   location.reload();
 }
 
+// Previo a Finalizar la compra, muestra el detalle y calcula el total
 function finalizarCarrito () {
   let total = 0;
   carrito.forEach(itemProducto => {
   total += itemProducto.precio * itemProducto.cantidad;
   });
-
+  // verifico si compro algo sino muestro aviso de que no hay productos agregados
   if (total > 0) {
   valorFinalCompra.innerHTML = `
     <div class="container p-4">
@@ -189,14 +183,13 @@ function finalizarCarrito () {
     
     </div>
     `;
+  // Elimino boton de finalizar compra porque y doy posibilidad de seguir comprando
   botonesFinalCompra.innerHTML = `
-  
       <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" onclick="limpiarCuenta()">Seguir Comprando</button>
       <button type="button" class="btn btn-outline-danger btn-sm" onclick="vaciarCarrito()" >Limpiar Carrito</button>     
-   
   `;
   }else {
-
+    // aviso de carrito vacio
     valorFinalCompra.innerHTML = `
     <div class="container p-4">
       <div class="alert alert-success p-1" role="alert">
@@ -213,14 +206,14 @@ function finalizarCarrito () {
     </div>
     `;
   }
-
 }
 
+// Funciones para eliminar el modal que muestra la cuenta del total cuando el usuario prefiere seguir comprando, 
+// asi no tengo que agregar un boton de actualizar carrito, tambien actualizo listado de botones
 function limpiarCuenta(){
   valorFinalCompra.innerHTML = `
   <div class="container p-4">
   </div>
- 
   `;
   botonesFinalCompra.innerHTML = `
     <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Seguir Comprando</button>
@@ -228,8 +221,6 @@ function limpiarCuenta(){
     <button type="button" class="btn btn-primary btn-sm" onclick="finalizarCarrito()">Finalizar Compra</button>
   `;
 }
-
-
 function limpiarCuentaModal(){
   modalPago.innerHTML = `
 <div class="modal-dialog modal-lg">
@@ -259,9 +250,7 @@ function limpiarCuentaModal(){
     `;
 }
 
-
-
-
+// Mensaje de agradecimento
 function enviarCarrito(){
   modalPago.innerHTML = `
   <div class="container p-4 text-center">
@@ -276,9 +265,8 @@ function enviarCarrito(){
   
 // Testeo
 const app = ()=>{
-  
-  cargarCarritoDesdeLocalStorage();
   mostrarProductos();
+  cargarCarritoDesdeLocalStorage();
 }
 
 //ejecuto app
